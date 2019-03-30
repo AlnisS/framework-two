@@ -6,43 +6,25 @@ public class SimpleTimer extends Subsystem {
         super(owner);
     }
 
-    protected void updateSelfData() {
+    public long getTime() {
+        return time;
+    }
+
+    void updateSelfData() {
         time = System.nanoTime() - startTime;
     }
 
-    protected void sendDataRequest() {}
-
     void receiveDataRequest(Msg message) {
-        if (message.data == Data.SIMPLE_TIME)
-            ((Subsystem) message.identifier)
-                    .answer(new Msg("SimpleTimer SIMPLE_TIME", time));
+        if (message.identifier == Data.SIMPLE_TIME)
+            message.data = time;
     }
-
-    void receiveDataAnswer(Msg message) {}
-
-    void updateLogic() {}
-
-    void sendActionRequest() {}
 
     void receiveActionRequest(Msg message) {
-
-    }
-
-    void receiveActionAnswer(Msg message) {
-
-    }
-
-    void updateControlModels() {
-
-    }
-
-    void publishControl() {
-
-    }
-
-    void cleanup() {
+        if (message.identifier == Action.RESET)
+            startTime = System.nanoTime();
 
     }
 
     public enum Data {SIMPLE_TIME}
+    public enum Action {RESET}
 }
